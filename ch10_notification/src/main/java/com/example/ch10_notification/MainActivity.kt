@@ -23,9 +23,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-
-
+        
         binding.notificationButton.setOnClickListener {
             val manager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
 
