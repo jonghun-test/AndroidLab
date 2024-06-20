@@ -1,17 +1,17 @@
 package com.example.ch13_activity
 
 import android.app.Activity
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
 import com.example.ch13_activity.databinding.ActivityAddBinding
 
 class AddActivity : AppCompatActivity() {
     lateinit var binding: ActivityAddBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityAddBinding.inflate(layoutInflater)
+        binding= ActivityAddBinding.inflate(layoutInflater)
         setContentView(binding.root)
     }
 
@@ -20,8 +20,7 @@ class AddActivity : AppCompatActivity() {
         return super.onCreateOptionsMenu(menu)
     }
 
-    //add............................
-    override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean = when(item.itemId){
         R.id.menu_add_save -> {
             val intent = intent
             intent.putExtra("result", binding.addEditView.text.toString())
@@ -29,7 +28,6 @@ class AddActivity : AppCompatActivity() {
             finish()
             true
         }
-
         else -> true
     }
 }

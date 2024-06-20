@@ -1,10 +1,10 @@
 package com.example.ch12_material
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
@@ -32,16 +32,16 @@ class MainActivity : AppCompatActivity() {
 
         //add......................................
         setSupportActionBar(binding.toolbar)
-        toggle = ActionBarDrawerToggle(this, binding.drawer, R.string.drawer_opened, R.string.drawer_closed)
+        toggle = ActionBarDrawerToggle(this, binding.drawer, R.string.drawer_opened,
+                R.string.drawer_closed)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         toggle.syncState()
 
         val adapter = MyFragmentPagerAdapter(this)
         binding.viewpager.adapter = adapter
-        TabLayoutMediator(binding.tabs, binding.viewpager) {
-            tab, position -> tab.text = "Tab${(position + 1)}"
+        TabLayoutMediator(binding.tabs, binding.viewpager){ tab, position ->
+            tab.text = "Tab${(position + 1)}"
         }.attach()
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

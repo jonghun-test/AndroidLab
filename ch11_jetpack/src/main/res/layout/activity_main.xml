@@ -11,18 +11,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?attr/colorPrimary"/>
-
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/viewpager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
-
     </LinearLayout>
 
     <TextView
@@ -36,6 +33,5 @@
         android:textColor="#FFFFFF"
         android:textSize="20dp"
         android:textStyle="bold"/>
-
 
 </androidx.drawerlayout.widget.DrawerLayout>

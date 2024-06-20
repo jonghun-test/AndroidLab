@@ -1,17 +1,14 @@
 package com.example.ch13_activity
 
-import android.R
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
+import android.os.PersistableBundle
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.ch13_activity.databinding.ActivityMainBinding
-
 
 class MainActivity : AppCompatActivity() {
 
@@ -21,14 +18,13 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
+        binding= ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         //add................................
 
         val requestLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(
-            ActivityResultContracts.StartActivityForResult()
-        ) {
+            ActivityResultContracts.StartActivityForResult()){
             it.data!!.getStringExtra("result")?.let {
                 datas?.add(it)
                 adapter.notifyDataSetChanged()
@@ -46,19 +42,20 @@ class MainActivity : AppCompatActivity() {
             mutableListOf<String>()
         }
 
+        
+
         val layoutManager = LinearLayoutManager(this)
-        binding.mainRecyclerView.layoutManager = layoutManager
-        adapter = MyAdapter(datas)
-        binding.mainRecyclerView.adapter = adapter
+        binding.mainRecyclerView.layoutManager=layoutManager
+        adapter=MyAdapter(datas)
+        binding.mainRecyclerView.adapter=adapter
         binding.mainRecyclerView.addItemDecoration(
             DividerItemDecoration(this, LinearLayoutManager.VERTICAL)
         )
     }
 
-    //add...............................
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putStringArrayList("datas", ArrayList(datas))
     }
-
+    
 }

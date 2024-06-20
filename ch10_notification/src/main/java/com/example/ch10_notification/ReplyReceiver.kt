@@ -11,17 +11,14 @@ import androidx.core.app.RemoteInput
 class ReplyReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
-
-        val replyText = RemoteInput.getResultsFromIntent(intent)
+        val replyTxt = RemoteInput.getResultsFromIntent(intent)
             ?.getCharSequence("key_text_reply")
-
-        Log.d("jonghun", "replyText:$replyText")
+        Log.d("kkang", "replyTxt:$replyTxt")
 
         val manager = context.getSystemService(
             AppCompatActivity.NOTIFICATION_SERVICE
         ) as NotificationManager
 
         manager.cancel(11)
-
     }
 }
