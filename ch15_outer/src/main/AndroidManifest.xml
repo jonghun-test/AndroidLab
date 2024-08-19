@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -11,14 +9,21 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AndroidLab">
         <service
+            android:name=".MyAIDLService"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="ACTION_SERVICE_AIDL"/>
+            </intent-filter>
+        </service>
+        <service
             android:name=".MyMessengerService"
             android:enabled="true"
-            android:exported="true"></service>
-
-        <receiver
-            android:name=".MyReceiver"
-            android:enabled="true"
-            android:exported="true" />
+            android:exported="true">
+            <intent-filter>
+                <action android:name="ACTION_SERVICE_Messenger" />
+            </intent-filter>
+        </service>
 
         <activity
             android:name=".MainActivity"
