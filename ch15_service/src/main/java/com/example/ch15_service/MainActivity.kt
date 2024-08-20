@@ -11,6 +11,7 @@ import android.os.*
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.getSystemService
+import com.example.ch15_outer.MyAIDLInterface
 import com.example.ch15_service.databinding.ActivityMainBinding
 import kotlinx.coroutines.*
 
@@ -25,7 +26,8 @@ class MainActivity : AppCompatActivity() {
     var messengerJob: Job? = null
 
     //aidl...........
-
+    var aidlService: MyAIDLInterface? = null
+    var aidlJob: Job? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -85,7 +87,7 @@ class MainActivity : AppCompatActivity() {
     inner class HandlerReplyMsg : Handler(Looper.getMainLooper()) {
         override fun handleMessage(msg: Message) {
             super.handleMessage(msg)
-            when(msg.what) {
+            when (msg.what) {
                 10 -> {
                     val bundle = msg.obj as Bundle
                     bundle.getInt("duration")?.let {
@@ -94,13 +96,14 @@ class MainActivity : AppCompatActivity() {
                                 binding.messengerProgress.max = it
                                 val backgroundScope = CoroutineScope(Dispatchers.Default + Job())
                                 messengerJob = backgroundScope.launch {
-                                    while(binding.messengerProgress.progress < binding.messengerProgress.max) {
+                                    while (binding.messengerProgress.progress < binding.messengerProgress.max) {
                                         delay(1000)
                                         binding.messengerProgress.incrementProgressBy(1000)
                                     }
                                 }
                                 changeViewEnable()
                             }
+
                             else -> {
                                 connectionMode = "none"
                                 unbindService(messengerConnection)
@@ -114,7 +117,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     //messenger connection ....................
-    val messengerConnection: ServiceConnection = object: ServiceConnection {
+    val messengerConnection: ServiceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             messenger = Messenger(service)
             val msg = Message()
@@ -155,20 +158,54 @@ class MainActivity : AppCompatActivity() {
     }
 
     //aidl connection .......................
+    val aidlConnection: ServiceConnection = object : ServiceConnection {
+        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            aidlService = MyAIDLInterface.Stub.asInterface(service)
+            aidlService!!.start()
+            binding.aidlProgress.max = aidlService!!.maxDuration
+            val backgroundScope = CoroutineScope(Dispatchers.Default + Job())
+            aidlJob = backgroundScope.launch {
+                while (binding.aidlProgress.progress < binding.aidlProgress.max) {
+                    delay(1000)
+                    binding.aidlProgress.incrementProgressBy(1000)
+                }
+            }
+            connectionMode = "aidl"
+            changeViewEnable()
+        }
 
+        override fun onServiceDisconnected(name: ComponentName?) {
+            aidlService = null
+        }
+    }
 
     private fun onCreateAIDLService() {
-
+        binding.aidlPlay.setOnClickListener {
+            val intent = Intent("ACTION_SERVICE_AIDL")
+            intent.setPackage("com.example.ch15_outer")
+            bindService(intent, aidlConnection, Context.BIND_AUTO_CREATE)
+        }
+        binding.aidlStop.setOnClickListener {
+            aidlService!!.stop()
+            unbindService(aidlConnection)
+            aidlJob?.cancel()
+            connectionMode = "none"
+            changeViewEnable()
+        }
     }
 
     private fun onStopAIDLService() {
-
+        unbindService(aidlConnection)
     }
 
     //JobScheduler
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private fun onCreateJobScheduler() {
-
+        var jobScheduler: JobScheduler? = getSystemService(JOB_SCHEDULER_SERVICE) as JobScheduler
+        val builder = JobInfo.Builder(1, ComponentName(this, MyJobService::class.java))
+        builder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_UNMETERED)
+        val jobInfo = builder.build()
+        jobScheduler!!.schedule(jobInfo)
     }
 
 }
